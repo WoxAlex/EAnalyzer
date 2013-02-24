@@ -5,17 +5,28 @@
 #include <iostream>
 #include <fstream>
 #include <locale>
-
+#include <cstdlib>
 using namespace std;
+
+std::wstring Convert(const char* p)
+{
+    size_t size = strlen(p) + 1;
+    wchar_t* str = new wchar_t[size];
+    mbstowcs(str, p, size);
+    std::wstring retStr(str);
+    delete[] str;
+    return retStr;
+}
 
 int main(int , char **)
 {
     wstring w;
 
     string s;
-
+    std::setlocale(LC_ALL, "");
     ifstream file;
-    char* data = new char[100];
+    char data[] = "Как";
+    wchar_t* utf8 = new wchar_t[10];
 
 
 
@@ -23,15 +34,15 @@ int main(int , char **)
 
     //file.read(data,100);
     file >> s;
-    memcpy(data,s.data(),s.length());
 
-    w = wstring((wchar_t*)data);
+    cout << mbstowcs(utf8,data,10) << endl;
 
-    cout << strcmp(data,"Кемерово") << endl;
+    w = Convert(data);
 
     file.close();
 
     cout << data << endl;
+    wcout << w << endl;
 
     return 0;
 }

@@ -11,8 +11,8 @@ namespace EAnalyzer
     public:
         Election();
 
-        static Election JsonParser(const std::string& str);
-        static std::string JsonCoder(const Election& election);
+        static Election JsonParser(const std::wstring& str);
+        static std::wstring JsonCoder(const Election& election);
     public:
         ElectionInfo info;
         std::vector<ElectionResult> result;

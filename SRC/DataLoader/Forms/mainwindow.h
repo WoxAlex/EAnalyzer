@@ -20,6 +20,7 @@ public:
 
 public slots:
         void ParseDefaultFile();
+        void LoadJsonFile();
 private:
     Ui::MainWindow *ui;
 };
