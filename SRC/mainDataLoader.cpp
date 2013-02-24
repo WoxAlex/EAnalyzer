@@ -1,4 +1,15 @@
-int main(int, char **)
+#include <QApplication>
+#include <iostream>
+#include "./SRC/DataLoader/Forms/mainwindow.h"
+#include <locale>
+
+int main(int argc, char *argv[])
 {
-    return 0;
+    QApplication a(argc, argv);
+
+    MainWindow mainw;
+    mainw.show();
+
+
+    return a.exec();
 }

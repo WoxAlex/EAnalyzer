@@ -1,8 +1,8 @@
 # -------------------------------------------------
 # Project created by QtCreator
 # -------------------------------------------------
-QT += core
-QT -= gui
+QT += gui
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = DataLoader
 DESTDIR = ../../BIN/DataLoader
@@ -11,9 +11,6 @@ MOC_DIR = ../../BIN/DataLoader/.moc
 RCC_DIR = ../../BIN/DataLoader/.rcc
 UI_DIR = ../../BIN/DataLoader/.ui
 
-
-CONFIG -= console
-CONFIG -= app_bundle
 TEMPLATE = app
 
 
@@ -44,6 +41,15 @@ LIBS += -lboost_system
 LIBS += -lboost_timer
 LIBS += -lboost_thread
 
-SOURCES += ../../SRC/DataLoader/*.cpp
-SOURCES += ../../SRC/mainDataLoader.cpp
-HEADERS += ../../SRC/DataLoader/*.h
+SOURCES += ../../SRC/DataLoader/*.cpp \
+    ../../SRC/DataLoader/Parsers/*.cpp \
+    ../../SRC/Analyzer/DataTypes/*.cpp \
+    ../../SRC/DataLoader/Forms/*.cpp \
+    ../../SRC/mainDataLoader.cpp
+
+HEADERS += ../../SRC/DataLoader/*.h \
+    ../../SRC/DataLoader/Parsers/*.h \
+    ../../SRC/Analyzer/DataTypes/*.h \
+    ../../SRC/DataLoader/Forms/*.h
+
+FORMS += ../../SRC/DataLoader/Forms/*.ui

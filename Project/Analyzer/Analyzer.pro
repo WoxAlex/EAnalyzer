@@ -42,11 +42,13 @@ LIBS += -lboost_system
 LIBS += -lboost_timer
 LIBS += -lboost_thread
 
-SOURCES += ../../SRC/Analyzer/*.cpp
-SOURCES += ../../SRC/Analyzer/Forms/*.cpp
-SOURCES += ../../SRC/mainAnalyzer.cpp
+SOURCES += ../../SRC/Analyzer/*.cpp \
+    ../../SRC/Analyzer/Forms/*.cpp \
+    ../../SRC/Analyzer/DataTypes/*.cpp \
+    ../../SRC/mainAnalyzer.cpp
 
-HEADERS += ../../SRC/Analyzer/*.h
-HEADERS += ../../SRC/Analyzer/Forms/*.h
+HEADERS += ../../SRC/Analyzer/*.h \
+    ../../SRC/Analyzer/Forms/*.h \
+    ../../SRC/Analyzer/DataTypes/*.h
 
 FORMS += ../../SRC/Analyzer/Forms/*.ui
