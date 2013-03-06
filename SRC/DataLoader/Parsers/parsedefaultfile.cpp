@@ -42,10 +42,8 @@ void ParseDefaultFile::LoadFromFile(const std::string &filename)
     int day,month,year;
 
     file >> day >> month >> year;
-    info.date->tm_year = year;
-    info.date->tm_mon  = month;
-    info.date->tm_mday  = day;
-    mktime ( info.date );
+    info.date.setDate(year,month,day);
+
 
     if(info.type == ElectionInfo::City)
     {

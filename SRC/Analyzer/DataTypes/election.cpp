@@ -10,6 +10,22 @@ Election::Election()
 {
 }
 
+Election Election::JsonParserFromFile(const string &filename)
+{
+    std::wifstream file;
+    std::wstring str;
+    file.open(filename.c_str());
+    while(file.good())
+    {
+        std::wstring t;
+        file >> t;
+        str += t+ L" ";
+    }
+    file.close();
+
+    return EAnalyzer::Election::JsonParser(str);
+}
+
 Election Election::JsonParser(const std::wstring &str)
 {
     Election election;
@@ -28,7 +44,8 @@ Election Election::JsonParser(const std::wstring &str)
 
     election.info.city = info.get<std::wstring>(L"Election city");
     election.info.type =ElectionInfo::ElectionType(info.get<int>(L"Election type"));
-    election.info.raw_date = info.get<time_t>(L"Election date");
+    std::wstring date_s = info.get<std::wstring>(L"Election date");
+    election.info.date = QDate::fromString(QString::fromStdWString(date_s));
 
     basic_ptree< std::wstring, std::wstring > candidates;
 
@@ -54,7 +71,7 @@ std::wstring Election::JsonCoder(const Election &election)
 
     basic_ptree< std::wstring, std::wstring > info;
     info.put(L"Election type", election.info.type);
-    info.put(L"Election date", election.info.raw_date);
+    info.put(L"Election date", election.info.date.toString().toStdWString());
     info.put(L"Election city", election.info.city);
 
     basic_ptree< std::wstring, std::wstring > candidates;
@@ -77,4 +94,22 @@ std::wstring Election::JsonCoder(const Election &election)
     wstringstream ss;
     json_parser::write_json(ss,json);
     return ss.str();
+}
+
+void Election::JsonCoderToFile(const Election &election, const string &name)
+{
+    std::wstring str = Election::JsonCoder(election);
+    wofstream file;
+    file.open(name.c_str());
+    file << str;
+    file.close();
+}
+
+bool Election::operator ==(const Election &other)
+{
+    bool f = (this->info == other.info);
+    f = f && this->result.size() == other.result.size();
+    for(uint i = 0; i< this->result.size(); ++i)
+            f = f && this->result[i] == other.result[i];
+    return f;
 }

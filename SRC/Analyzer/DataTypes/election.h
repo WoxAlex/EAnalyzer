@@ -11,11 +11,14 @@ namespace EAnalyzer
     public:
         Election();
 
+        static Election JsonParserFromFile(const std::string& file);
         static Election JsonParser(const std::wstring& str);
         static std::wstring JsonCoder(const Election& election);
+        static void JsonCoderToFile(const Election& election, const std::string& file);
     public:
         ElectionInfo info;
         std::vector<ElectionResult> result;
+        bool operator == (const Election& other);
     };
 }
 

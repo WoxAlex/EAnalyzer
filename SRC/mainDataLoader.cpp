@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <iostream>
 #include "./SRC/DataLoader/Forms/mainwindow.h"
+#include "./SRC/DataLoader/Forms/editjsonfile.h"
 #include <locale>
 
 int main(int argc, char *argv[])

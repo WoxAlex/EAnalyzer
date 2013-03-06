@@ -12,6 +12,7 @@ namespace EAnalyzer
         std::wstring name;
         std::wstring surname;
         std::wstring fname;
+        bool operator == (const Person& other);
     };
 }
 

@@ -50,6 +50,7 @@ SOURCES += ../../SRC/DataLoader/*.cpp \
 HEADERS += ../../SRC/DataLoader/*.h \
     ../../SRC/DataLoader/Parsers/*.h \
     ../../SRC/Analyzer/DataTypes/*.h \
-    ../../SRC/DataLoader/Forms/*.h
+    ../../SRC/DataLoader/Forms/*.h \
+    ../../SRC/DataLoader/Forms/editjsonfile.h
 
 FORMS += ../../SRC/DataLoader/Forms/*.ui

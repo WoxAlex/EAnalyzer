@@ -2,7 +2,7 @@
 #define ELECTIONINFO_H
 
 #include <vector>
-#include <time.h>
+#include <QDate>
 #include "SRC/Analyzer/DataTypes/person.h"
 namespace EAnalyzer
 {
@@ -18,8 +18,8 @@ namespace EAnalyzer
         ElectionType type;
         std::vector<Person> candidates;
         std::wstring city;
-        time_t raw_date;
-        struct tm * date;
+        QDate date;
+        bool operator == (const ElectionInfo& other);
 
     };
 }

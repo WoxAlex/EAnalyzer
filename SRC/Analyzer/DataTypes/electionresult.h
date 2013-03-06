@@ -30,6 +30,7 @@ namespace EAnalyzer
         int VotingBallotsLost;
         int VotingBallotsUnaccounted;
         std::vector<int> candidates;
+        bool operator == (const ElectionResult& other);
     };
 }
 

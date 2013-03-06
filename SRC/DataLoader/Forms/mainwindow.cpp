@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "SRC/DataLoader/Parsers/parsedefaultfile.h"
+
 #include <fstream>
 #include <iostream>
 #include <QFileDialog>
@@ -12,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(this->ui->commandLinkButton, SIGNAL(clicked()), SLOT(ParseDefaultFile()));
     connect(this->ui->commandLinkButton_2, SIGNAL(clicked()), SLOT(LoadJsonFile()));
+    connect(this->ui->commandLinkButton_3, SIGNAL(clicked()), SLOT(EditJson()));
+    editForm = new EditJsonFile(this);
+
 }
 
 void MainWindow::ParseDefaultFile()
@@ -40,23 +44,17 @@ void MainWindow::LoadJsonFile()
     if(infileName == "")
         return;
 
-    std::wifstream file;
-    std::wstring str;
-    file.open(infileName.toStdString().c_str());
-    while(file.good())
-    {
-        std::wstring t;
-        file >> t;
-        str += t+ L" ";
-    }
-    //file >> str;
-    file.close();
-
-    EAnalyzer::Election election = EAnalyzer::Election::JsonParser(str);
+    EAnalyzer::Election election = EAnalyzer::Election::JsonParserFromFile(infileName.toStdString());
     ui->commandLinkButton_2->setText(QString::fromStdWString(election.info.city));
+}
+
+void MainWindow::EditJson()
+{
+    editForm->show();
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete editForm;
 }
