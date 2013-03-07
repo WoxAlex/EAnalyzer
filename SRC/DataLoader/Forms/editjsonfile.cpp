@@ -96,9 +96,9 @@ void EditJsonFile::SetElectionData(const EAnalyzer::Election &election)
     ui->tableWidgetElectionResult->setRowCount(election.result.size() );
 
     if(election.info.type == EAnalyzer::ElectionInfo::City)
-        ui->tableWidgetElectionResult->setColumnCount(13 + election.info.candidates.size());
+        ui->tableWidgetElectionResult->setColumnCount(14 + election.info.candidates.size());
     else
-        ui->tableWidgetElectionResult->setColumnCount(20 + election.info.candidates.size());
+        ui->tableWidgetElectionResult->setColumnCount(19 + election.info.candidates.size());
 
     int n = 0;
     for(std::vector<EAnalyzer::ElectionResult>::const_iterator it = election.result.begin(),end = election.result.end(); it != end; ++it, ++n)
@@ -111,55 +111,63 @@ void EditJsonFile::SetElectionData(const EAnalyzer::Election &election)
         if (election.info.type == EAnalyzer::ElectionInfo::City)
             city = true;
 
+
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.N_LEC)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.N_LEC)));
         ui->tableWidgetElectionResult->setItem(
                     n,i++, new QTableWidgetItem(QString::fromStdWString(t.TEC)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.VotersAtLEC)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.VotersAtLEC)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.VotingBallots)));
-        if (!city)
+                    n,i++, new IntTableWidgetItem(QString::number(t.VotingBallots)));
+        if (city)
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleVotedInAdvance)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleVotedInAdvance)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleVotedIn)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleVotedIn)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleVotedOut)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleVotedOut)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.CanceledBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.CanceledBallots)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.BallotsFoundOut)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.BallotsFoundOut)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.BallotsFoundIn)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.BallotsFoundIn)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.InvalidBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.InvalidBallots)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.ValidBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.ValidBallots)));
         if(!city)
         {
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.AbsenteeBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.AbsenteeBallots)));
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleTookAbsenteeBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleTookAbsenteeBallots)));
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleVotedWithAbsenteeBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleVotedWithAbsenteeBallots)));
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.CanceledAbsenteeBallots)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.CanceledAbsenteeBallots)));
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.PeopleTookAbsenteeBallotsFromTEC)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.PeopleTookAbsenteeBallotsFromTEC)));
             ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.AbsenteeBallotsLost)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.AbsenteeBallotsLost)));
         }
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.VotingBallotsLost)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.VotingBallotsLost)));
         ui->tableWidgetElectionResult->setItem(
-                    n,i++, new QTableWidgetItem(QString::number(t.VotingBallotsUnaccounted)));
+                    n,i++, new IntTableWidgetItem(QString::number(t.VotingBallotsUnaccounted)));
         for(std::vector<int>::const_iterator ic = t.candidates.begin(),cend = t.candidates.end(); ic != cend; ++ic)
         {
             ui->tableWidgetElectionResult->setItem(
-                        n,i++, new QTableWidgetItem(QString::number(*ic)));
+                        n,i++, new IntTableWidgetItem(QString::number(*ic)));
         }
+
+        bool correct_result = (t.VotingBallots-t.BallotsFoundOut-t.BallotsFoundIn-t.CanceledBallots-t.VotingBallotsLost+t.VotingBallotsUnaccounted==0) &&
+                (t.AbsenteeBallots-t.PeopleTookAbsenteeBallots-t.CanceledAbsenteeBallots-t.AbsenteeBallotsLost==0);
+
+        bool strange_result = (t.PeopleVotedIn+t.PeopleVotedOut-t.BallotsFoundIn-t.BallotsFoundOut-t.VotingBallotsLost+t.VotingBallotsUnaccounted==0);
+
+        SetRowColor(n,correct_result,strange_result);
     }
     update_data_table = true;
 
@@ -203,7 +211,7 @@ void EditJsonFile::GetElectionData(EAnalyzer::Election &election)
         t.TEC = ui->tableWidgetElectionResult->item(n,i++)->text().toStdWString();
         t.VotersAtLEC = ui->tableWidgetElectionResult->item(n,i++)->text().toInt();
         t.VotingBallots = ui->tableWidgetElectionResult->item(n,i++)->text().toInt();
-        if (!city)
+        if (city)
             t.PeopleVotedInAdvance = ui->tableWidgetElectionResult->item(n,i++)->text().toInt();
         t.PeopleVotedIn = ui->tableWidgetElectionResult->item(n,i++)->text().toInt();
         t.PeopleVotedOut = ui->tableWidgetElectionResult->item(n,i++)->text().toInt();
@@ -255,10 +263,10 @@ void EditJsonFile::ShowElection(const EAnalyzer::Election &election)
     header = ui->tableWidgetElectionResult->horizontalHeader();
     bool city = true;
     if(election.info.type == EAnalyzer::ElectionInfo::City)
-        model = new QStandardItemModel( 1, 13 + election.info.candidates.size(), header );
+        model = new QStandardItemModel( 1, 14 + election.info.candidates.size(), header );
     else
     {
-        model = new QStandardItemModel( 1, 20 + election.info.candidates.size(), header );
+        model = new QStandardItemModel( 1, 19 + election.info.candidates.size(), header );
         city = false;
     }
     int i = 0;
@@ -266,7 +274,7 @@ void EditJsonFile::ShowElection(const EAnalyzer::Election &election)
     model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"ТИК")));
     model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"VotersAtLEC")));
     model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"VotingBallots")));
-    if (!city)
+    if (city)
         model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"PeopleVotedInAdvance")));
     model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"PeopleVotedIn")));
     model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(L"PeopleVotedOut")));
@@ -292,16 +300,16 @@ void EditJsonFile::ShowElection(const EAnalyzer::Election &election)
         model->setHeaderData(i++,Qt::Horizontal,QVariant(QString::fromStdWString(ic->surname)));
     }
     header->setModel(model);
-    header->setResizeMode(QHeaderView::Stretch);
+    header->setResizeMode(QHeaderView::Interactive);
     ui->tableWidgetElectionResult->setHorizontalHeader(header);
 
     ui->tableWidgetAddResult->horizontalHeader()->setResizeMode(QHeaderView::Stretch);
     ui->tableWidgetAddResult->verticalHeader()->setResizeMode(QHeaderView::Stretch);
     if(election.info.type == EAnalyzer::ElectionInfo::City)
-        ui->tableWidgetAddResult->setColumnCount(13 + election.info.candidates.size());
+        ui->tableWidgetAddResult->setColumnCount(14 + election.info.candidates.size());
     else
     {
-        ui->tableWidgetAddResult->setColumnCount(20 + election.info.candidates.size());
+        ui->tableWidgetAddResult->setColumnCount(19 + election.info.candidates.size());
         city = false;
     }
     i = 0;
@@ -309,7 +317,7 @@ void EditJsonFile::ShowElection(const EAnalyzer::Election &election)
     ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"ТИК")));
     ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"VotersAtLEC")));
     ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"VotingBallots")));
-    if (!city)
+    if (city)
         ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"PeopleVotedInAdvance")));
     ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"PeopleVotedIn")));
     ui->tableWidgetAddResult->setItem(0,i++,new QTableWidgetItem(QString::fromStdWString(L"PeopleVotedOut")));
@@ -379,6 +387,22 @@ void EditJsonFile::SetJson(const EAnalyzer::Election &election)
 {
     this->election = election;
     ShowElection(election);
+}
+
+void EditJsonFile::SetRowColor(int row, bool correct_result, bool strange_result)
+{
+    int columns = ui->tableWidgetElectionResult->columnCount();
+
+    QColor color(255,0,0,150);
+
+    if(correct_result && strange_result)
+        color.setRgb(100,255,0,50);
+    else if(correct_result)
+        color.setRgb(255,255,0,150);
+
+    for (int i = 0; i< columns; ++i)
+        ui->tableWidgetElectionResult->item(row,i)->setBackgroundColor(color);
+
 }
 
 void EditJsonFile::AddCandidate()
@@ -469,7 +493,7 @@ void EditJsonFile::AddData()
     result.TEC = ui->tableWidgetAddResult->item(0,i++)->text().toStdWString();
     result.VotersAtLEC = ui->tableWidgetAddResult->item(0,i++)->text().toInt();
     result.VotingBallots = ui->tableWidgetAddResult->item(0,i++)->text().toInt();
-    if (!city)
+    if (city)
         result.PeopleVotedInAdvance = ui->tableWidgetAddResult->item(0,i++)->text().toInt();
     result.PeopleVotedIn = ui->tableWidgetAddResult->item(0,i++)->text().toInt();
     result.PeopleVotedOut = ui->tableWidgetAddResult->item(0,i++)->text().toInt();

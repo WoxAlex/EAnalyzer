@@ -107,7 +107,7 @@
            <enum>Qt::DefaultContextMenu</enum>
           </property>
           <property name="text">
-           <string>Датта</string>
+           <string>Дата</string>
           </property>
           <property name="dragEnabled">
            <bool>false</bool>
