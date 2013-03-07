@@ -49,6 +49,8 @@ SOURCES += ../../SRC/Analyzer/*.cpp \
 
 HEADERS += ../../SRC/Analyzer/*.h \
     ../../SRC/Analyzer/Forms/*.h \
-    ../../SRC/Analyzer/DataTypes/*.h
+    ../../SRC/Analyzer/DataTypes/*.h \
+    ../../SRC/Analyzer/DataTypes/mesh.h \
+    ../../SRC/Analyzer/DataTypes/tetrahedralmesh.h
 
 FORMS += ../../SRC/Analyzer/Forms/*.ui

@@ -12,8 +12,8 @@ namespace DataLoader
         ParseDefaultFile();
 
         void LoadFromFile(const std::string& filename);
-
         void SaveToJson(const std::string& filename);
+
         static std::wstring Convert(const char* p);
         ~ParseDefaultFile();
     public:
