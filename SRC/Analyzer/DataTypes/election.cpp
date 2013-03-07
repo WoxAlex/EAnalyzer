@@ -61,6 +61,45 @@ Election Election::JsonParser(const std::wstring &str)
         election.info.candidates.push_back(p);
     }
 
+    election.result.clear();
+    for(basic_ptree< std::wstring, std::wstring >::iterator child = result.begin(), end = result.end();
+        child != end; ++child)
+    {
+        ElectionResult er;
+        er.N_LEC = child->second.get<int>(L"LEC number");
+        er.TEC = child->second.get<std::wstring>(L"TEC name");
+        er.VotersAtLEC = child->second.get<int>(L"Number of voters at LEC");
+        er.VotingBallots = child->second.get<int>(L"Number of voting ballots given by TEC");
+        er.PeopleVotedInAdvance = child->second.get<int>(L"Number of people that voted in advance");
+        er.PeopleVotedIn = child->second.get<int>(L"Number of people that voted inside");
+        er.PeopleVotedOut = child->second.get<int>(L"Number of people voted outside");
+        er.CanceledBallots = child->second.get<int>(L"Number of canceled ballots");
+        er.BallotsFoundOut = child->second.get<int>(L"Number of ballots that found out");
+        er.BallotsFoundIn = child->second.get<int>(L"Number of ballots that found in");
+        er.InvalidBallots = child->second.get<int>(L"Number of invalid ballots");
+        er.ValidBallots = child->second.get<int>(L"Number of valid ballots");
+        er.AbsenteeBallots = child->second.get<int>(L"Number of absentee ballots");
+        er.PeopleTookAbsenteeBallots = child->second.get<int>(L"Number of people that took absentee ballots");
+        er.PeopleVotedWithAbsenteeBallots = child->second.get<int>(L"Number of people that voted with absentee ballots");
+        er.CanceledAbsenteeBallots = child->second.get<int>(L"Number of canceled absentee ballots");
+        er.PeopleTookAbsenteeBallotsFromTEC = child->second.get<int>(L"Number of people that took absentee ballots from TEC");
+        er.AbsenteeBallotsLost = child->second.get<int>(L"Number of lost absentee ballots");
+        er.VotingBallotsLost = child->second.get<int>(L"Number of lost voting ballots");
+        er.VotingBallotsUnaccounted = child->second.get<int>(L"Number of unaccounted voting ballots");
+
+        er.candidates.clear();
+        basic_ptree< std::wstring, std::wstring > candidates_votes = child->second.get_child(L"Candidates' votes");
+        for(basic_ptree< std::wstring, std::wstring >::iterator child = candidates_votes.begin(), end = candidates_votes.end();
+            child != end; ++child)
+        {
+            int i = child->second.get<int>(L"");
+            er.candidates.push_back(i);
+        }
+
+        election.result.push_back(er);
+    }
+
+
     return election;
 }
 
@@ -89,8 +128,48 @@ std::wstring Election::JsonCoder(const Election &election)
 
     basic_ptree< std::wstring, std::wstring > result;
     json.add_child(L"Info",info);
-    json.add_child(L"Result",result);
 
+
+
+    for(vector<ElectionResult>::const_iterator it = election.result.begin(), end = election.result.end();
+        it != end; ++it)
+    {
+        basic_ptree< std::wstring, std::wstring > LEC;
+
+        LEC.put(L"LEC number", it->N_LEC);
+        LEC.put(L"TEC name", it->TEC);
+        LEC.put(L"Number of voters at LEC", it->VotersAtLEC);
+        LEC.put(L"Number of voting ballots given by TEC", it->VotingBallots);
+        LEC.put(L"Number of people that voted in advance", it->PeopleVotedInAdvance);
+        LEC.put(L"Number of people that voted inside", it->PeopleVotedIn);
+        LEC.put(L"Number of people voted outside", it->PeopleVotedOut);
+        LEC.put(L"Number of canceled ballots", it->CanceledBallots);
+        LEC.put(L"Number of ballots that found out", it->BallotsFoundOut);
+        LEC.put(L"Number of ballots that found in", it->BallotsFoundIn);
+        LEC.put(L"Number of invalid ballots", it->InvalidBallots);
+        LEC.put(L"Number of valid ballots", it->ValidBallots);
+        LEC.put(L"Number of absentee ballots", it->AbsenteeBallots);
+        LEC.put(L"Number of people that took absentee ballots", it->PeopleTookAbsenteeBallots);
+        LEC.put(L"Number of people that voted with absentee ballots", it->PeopleVotedWithAbsenteeBallots);
+        LEC.put(L"Number of canceled absentee ballots", it->CanceledAbsenteeBallots);
+        LEC.put(L"Number of people that took absentee ballots from TEC", it->PeopleTookAbsenteeBallotsFromTEC);
+        LEC.put(L"Number of lost absentee ballots", it->AbsenteeBallotsLost);
+        LEC.put(L"Number of lost voting ballots", it->VotingBallotsLost);
+        LEC.put(L"Number of unaccounted voting ballots", it->VotingBallotsUnaccounted);
+
+        basic_ptree< std::wstring, std::wstring > candidates_votes;
+        for(vector<int>::const_iterator iter = it->candidates.begin(), i_end = it->candidates.end();
+            iter != i_end; ++iter)
+        {
+            basic_ptree< std::wstring, std::wstring > candidate;
+            candidate.put(L"",*iter);
+            candidates_votes.push_back(std::make_pair(L"", candidate));
+
+        }
+        LEC.add_child(L"Candidates' votes",candidates_votes);
+        result.push_back(std::make_pair(L"",LEC));
+    }
+    json.add_child(L"Result",result);
     wstringstream ss;
     json_parser::write_json(ss,json);
     return ss.str();
